@@ -13,8 +13,8 @@ const port = process.env.PORT || 8000
 app.use(compression())
 app.use(bodyParser())
 app.use(cookieParser())
-app.get('/api/data', (req, res) => res.json(data))
 if (process.env.NODE_ENV === 'production') {
+  app.get('/api/data', (req, res) => res.json(data))
   app.use(express.static(root))
   app.use(fallback('index.html', { root }))
 } else {
@@ -23,5 +23,6 @@ if (process.env.NODE_ENV === 'production') {
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
     next()
   })
+  app.get('/api/data', (req, res) => res.json(data))
 }
 app.listen(port, () => console.log('Listening on port ' + port))
