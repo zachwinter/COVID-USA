@@ -8,6 +8,7 @@
     template(v-slot:map)
       .map(ref="map")
         ToolTip
+        GitHub
 </template>
 
 <script>
@@ -25,6 +26,7 @@ import BaseLayout from '@/layouts/BaseLayout'
 import Buckets from '@/components/Buckets'
 import Controls from '@/components/Controls'
 import Map from '@/classes/Map'
+import GitHub from '@/components/GitHub'
 
 export default {
   components: {
@@ -32,7 +34,8 @@ export default {
     BaseLayout,
     ToolTip, 
     Controls,
-    Buckets
+    Buckets,
+    GitHub
   },
   computed: {
     ...mapState(['index', 'dataset', 'loading', 'data', 'topojson']),

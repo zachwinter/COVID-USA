@@ -234,10 +234,8 @@ const path = require('path');
       return acc
     }, {})
   }
-  
   await parseDataset('cases')
   await parseDataset('deaths')
-  
   DATA.combined.days = DATA.cases.days.map((caseDay, i) => {
     const deathDay =  DATA.deaths.days[i]
     for (let key in caseDay) {
@@ -256,7 +254,6 @@ const path = require('path');
     }
     return caseDay
   })
-  
   DATA.combined.country = DATA.cases.country.map((day, i) => {
     return {
       date: day.date,
@@ -264,7 +261,6 @@ const path = require('path');
       deaths: DATA.deaths.country[i].value
     }
   })
-  
   DATA.combined.counties = {}
   for (let county in DATA.cases.counties) {
     const day =  DATA.cases.counties[county]
@@ -276,7 +272,6 @@ const path = require('path');
       }
     })
   }
-  
   DATA.combined.states = {}
   for (let state in DATA.cases.states) {
     const day = DATA.cases.states[state]
@@ -288,9 +283,7 @@ const path = require('path');
       }
     })
   }
-
   DATA.combined.locations = DATA.cases.locations
-  
   fs.writeFile('data.json', JSON.stringify(DATA.combined), 'utf8', err => {
     if (err) console.log(err)
   })

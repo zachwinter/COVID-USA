@@ -6,7 +6,7 @@ import * as d3 from 'd3'
 import * as topojson from 'topojson-client'
 import Sprite from './Sprite'
 import Observe from '../util/observe'
-import { createElement } from '@/util/dom'
+// import { createElement } from '@/util/dom'
 
 const COORDS = {}
 
@@ -38,11 +38,11 @@ export default class Map {
       pointSize: 30
     }
 
-    if ('__OffscreenCanvas' in window) {
-      this.initWorker()
-      this.state = Observe(this.state)
-      return
-    }
+    // if ('__OffscreenCanvas' in window) {
+    //   this.initWorker()
+    //   this.state = Observe(this.state)
+    //   return
+    // }
  
     this.state = Observe(this.state)
     this.initCanvas()
@@ -56,30 +56,30 @@ export default class Map {
     window.addEventListener('resize', this.onResize.bind(this))
   }
 
-  initWorker () {
-    const worker = new Worker('../workers/map.worker.js', { type: 'module' });
+  // initWorker () {
+  //   const worker = new Worker('../workers/map.worker.js', { type: 'module' });
 
-    worker.postMessage({
-      type: 'INIT',
-      payload: this.state
-    })
+  //   worker.postMessage({
+  //     type: 'INIT',
+  //     payload: this.state
+  //   })
 
-    const c = (canvas) => {
-      canvas.width = this.state.width * window.devicePixelRatio
-      canvas.height = this.state.height * window.devicePixelRatio
-      canvas.style.width = this.state.width + 'px'
-      canvas.style.height = this.state.height + 'px'
-    }
+  //   const c = (canvas) => {
+  //     canvas.width = this.state.width * window.devicePixelRatio
+  //     canvas.height = this.state.height * window.devicePixelRatio
+  //     canvas.style.width = this.state.width + 'px'
+  //     canvas.style.height = this.state.height + 'px'
+  //   }
 
-    const map = createElement('canvas', this.container)
-    const cases = createElement('canvas', this.container)
-    c(map)
-    c(cases)
-    const offscreenMap = map.transferControlToOffscreen()
-    const offscreenCases = map.transferControlToOffscreen()
-    worker.postMessage({ type: 'MAP_CANVAS', payload: offscreenMap }, [offscreenMap])
-    worker.postMessage({ type: 'CASES_CANVAS', payload: offscreenCases }, [offscreenCases])
-  }
+  //   const map = createElement('canvas', this.container)
+  //   const cases = createElement('canvas', this.container)
+  //   c(map)
+  //   c(cases)
+  //   const offscreenMap = map.transferControlToOffscreen()
+  //   const offscreenCases = map.transferControlToOffscreen()
+  //   worker.postMessage({ type: 'MAP_CANVAS', payload: offscreenMap }, [offscreenMap])
+  //   worker.postMessage({ type: 'CASES_CANVAS', payload: offscreenCases }, [offscreenCases])
+  // }
 
   initCanvas () {
     const { canvas: mapCanvas, ctx: mapCtx } = createCanvas({ target: this.container, width: this.state.width, height: this.state.height, alpha: false })
