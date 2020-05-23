@@ -1,0 +1,11 @@
+@mixin flex-width($width) {
+  min-width: $width;
+  max-width: $width;
+  width: $width;
+}
+
+@mixin flex-height($height) {
+  min-height: $height;
+  max-height: $height;
+  height: $height;
+}

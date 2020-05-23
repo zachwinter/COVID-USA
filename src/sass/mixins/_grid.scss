@@ -1,0 +1,17 @@
+@mixin row () {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+
+@mixin column ($_width, $gutter: false) {
+  $width: (100% / 12) * $_width;
+  width: 100%;
+  min-width: $width;
+  max-width: $width;
+}
+
+@mixin shift ($_width) {
+  $width: (100% / 12) * $_width;
+  margin-left: $width;
+}

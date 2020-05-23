@@ -1,0 +1,12 @@
+$base-margin: 30px;
+$outer-padding: 30px;
+$breakpoints: (
+  tiny: 320,
+  mobile-sm: 480,
+  mobile: 640,
+  tablet-sm: 768,
+  tablet: 1024,
+  laptop: 1280
+);
+$aside-width: 300px;
+$aside-height: 50%;
