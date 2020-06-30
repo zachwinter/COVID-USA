@@ -4,7 +4,7 @@ const Parser = require('node-dbf').default
 const population = require('./population.json')
 const days = require('./days.json')
 
-const averageRecoveryInDays = 27
+const averageRecoveryInDays = 21
 
 function parseCensus () {
   return new Promise(resolve => {
