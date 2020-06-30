@@ -2,11 +2,11 @@
 .tooltip(v-if="hover" :style="{ transform, width: width + 'px' }")
   .rows
     .row
-      span {{ hover.county.name }}
-      Metric(:metric="countyStats")
+      span {{ hover.name }}
+      Metric(:metric="countyStats" bucket="counties" :id="hover.fips")
     .row
-      span {{ hover.state.name }}
-      Metric(:metric="stateStats")
+      span {{ hover.state }}
+      Metric(:metric="stateStats" bucket="state" :id="hover.state")
     .row
       span USA
       Metric(:metric="usaStats")
@@ -22,7 +22,7 @@ export default {
   mixins: [fill],
   components: { Metric, BarChart },
   data: () => ({
-    width: 200
+    width: 250
   }),
   mounted () {
     this.setViewport()
@@ -52,13 +52,14 @@ export default {
 .tooltip {
   @include position(absolute, 0 null null 0);
   // height: 150px;
-  z-index: 10;
+  z-index: 100;
   pointer-events: none;
   background: rgba($black, .2);
   backdrop-filter: blur(10px);
   color: $white;
   border-radius: 10px;
   display: flex;
+  padding: 10px 20px;
 }
 
 .rows {
@@ -71,38 +72,13 @@ export default {
   @include flex(center, space-between, row);
   margin-bottom: 7px;
   border-bottom: 1px solid rgba($white, .1);
-  width: 170px;
+  width: 100%;
   padding-bottom: 7px;
   font-size: 12px;
-
-  // div {
-  //   @include flex(center, space-between);
-  //   width: 100%;
-  // }
-
-  &:first-of-type {
-    padding-top: 7px;
-  }
 
   &:last-of-type {
     margin-bottom: 0;
     border-bottom: 0;
   }
-}
-
-small {
-  opacity: .5;
-  padding-left: 5px;
-}
-
-.chart {
-  @include size(160px, 30px);
-  position: relative;
-  // margin-left: 30px;
-}
-
-.val {
-  @include flex(center, space-between);
-  @include size(100%, auto);
 }
 </style>

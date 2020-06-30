@@ -7,7 +7,7 @@ export const PI_OVER_180 = PI / 180
 export function createCanvas ({
   width = window.innerWidth,
   height = window.innerHeight, 
-  dpi =  Math.min(window.devicePixelRatio, 2), 
+  dpi = window.devicePixelRatio, 
   target = null,
   alpha = true
 } = {}) {
@@ -59,4 +59,15 @@ export function distance2D ([x1, y1], [x2, y2]) {
   const x = Math.pow(x1 - x2, 2)
   const y = Math.pow(y1 - y2, 2)
   return Math.sqrt(x + y)
+}
+
+export class Sprite {
+  constructor ({ width, height, paint }) {
+    const { canvas, ctx } = createCanvas({ width, height })
+    this.width = width
+    this.height = height
+    this.canvas = canvas
+    this.ctx = ctx
+    paint.call(this)
+  }
 }

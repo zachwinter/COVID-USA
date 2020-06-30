@@ -1,8 +1,8 @@
 <template lang="pug">
 .radio-group
-  label(v-for="(option, i) in options" :key="i")
+  label(v-for="(option, i) in options" :key="i" :class="{ disabled }")
     .radio-container
-      input(type="radio" name="group" :value="options.value" :checked="option.value === value" @input="$emit('input', option.value)")
+      input(type="radio" :disabled="disabled" :name="name" :value="options.value" :checked="option.value === value" @input="$emit('input', option.value)")
       i
     span {{ option.label }}
 </template>
@@ -17,6 +17,14 @@ export default {
     value: {
       type: String,
       required: true
+    },
+    name: {
+      type: String,
+      required: true
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   }
 }
@@ -24,11 +32,15 @@ export default {
 
 <style lang="scss" scoped>
 .radio-group {
-  @include flex(center, space-between);
+  @include flex(center, flex-start);
 
   label {
-    @include flex;
-    margin-left: 10px;
+    @include flex(center, flex-start);
+    width: 50%;
+    text-align: left;
+
+    &.disabled { opacity: .5 }
+    // margin-left: 10px;
   }
 
   span { padding-left: 10px; }

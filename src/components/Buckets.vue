@@ -1,19 +1,19 @@
 <template lang="pug">
 .buckets
-  .bucket(v-if="county")
+  .bucket(v-if="activeCounty")
     h2
-      span {{ county.name }}
-      Metric(:metric="countyStats")
+      span {{ activeCounty.county }}
+      Metric(:metric="countyStats" bucket="counties" :id="activeCounty.fips")
     BarChart(:model="countyModel" :index="index")
   .bucket(v-if="state")
     h2
       span {{ state }}
-      Metric(:metric="stateStats")
+      Metric(:metric="stateStats" bucket="state" :id="state")
     BarChart(:model="stateModel" :index="index")
   .bucket
     h2
       span USA
-      Metric(:metric="usaStats")
+      Metric(:metric="usaStats" bucket="country")
     BarChart(:model="countryModel" :index="index")
 </template>
 
@@ -26,10 +26,10 @@ export default {
   components: { Metric, BarChart },
   computed: {
     ...mapState([
-      'county',
       'state',
       'isMobile',
-      'index'
+      'index',
+      'data'
     ]),
     ...mapGetters([
       'stateModel',
@@ -37,7 +37,8 @@ export default {
       'countyModel',
       'countyStats',
       'usaStats',
-      'countryModel'
+      'countryModel',
+      'activeCounty'
     ])
   }
 }
@@ -45,7 +46,7 @@ export default {
 
 <style lang="scss" scoped>
 .buckets {
-  height: calc(100% - 82px);
+  height: calc(100% - 162px);
   overflow-y: auto;
   padding: 20px;
 

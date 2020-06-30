@@ -11,7 +11,7 @@ import Observe from '../util/observe'
 const COORDS = {}
 
 export default class Map {
-  constructor ({ container, dataset, caseIndex, data, usa }) {
+  constructor ({ container, dataset, caseIndex, mapIndex, data, usa }) {
     this.usa = usa
     this.data = data
     this.container = container
@@ -25,6 +25,7 @@ export default class Map {
       day: this.data.days[0],
       index: 0,
       caseIndex,
+      mapIndex,
       mouse: [0, 0],
       colors: {
         background: `#FBD0D0`,
@@ -117,6 +118,10 @@ export default class Map {
       }
     })
 
+    this.state.watch('mapIndex', () => {
+      this.paintCases()
+    })
+
     this.state.watch('dataset', () => {
       this.paintCases()
       this.state.hover = this.state.hover ? this.buildToolTip(this.state.hover.county.fips) : null
@@ -164,19 +169,19 @@ export default class Map {
         this.ctx.scale(multiplier, multiplier)
         const path = d3.geoPath(self.projection, this.ctx)
         this.ctx.beginPath()
-        path(topojson.feature(self.usa, self.usa.objects.counties))
+        path(topojson.mesh(self.usa, self.usa.objects.counties))
         this.ctx.lineWidth = self.featureScale(self.state.width) / 10
         this.ctx.fillStyle = self.state.colors.countyFill
         this.ctx.strokeStyle = self.state.colors.countyStroke
-        this.ctx.fill()
+        // this.ctx.fill()
         this.ctx.stroke()
         this.ctx.beginPath()
-        path(topojson.feature(self.usa, self.usa.objects.states))
+        path(topojson.mesh(self.usa, self.usa.objects.states))
         this.ctx.lineWidth = self.featureScale(self.state.width) / 2
         this.ctx.strokeStyle = self.state.colors.stateStroke
         this.ctx.stroke()
         this.ctx.beginPath()
-        path(topojson.feature(self.usa, self.usa.objects.nation))
+        path(topojson.mesh(self.usa, self.usa.objects.nation))
         this.ctx.lineWidth = self.featureScale(self.state.width)
         this.ctx.strokeStyle = self.state.colors.nationStroke
         this.ctx.stroke()
@@ -307,10 +312,15 @@ export default class Map {
     this.casesCtx.beginPath()
     for (let key in this.state.day) {
       if (COORDS[key]) {
-        const cases = this.state.day[key][0][0]
-        const deaths = this.state.day[key][1][0]
+        const cases = this.state.day[key][0][parseInt(this.state.mapIndex, 10)]
+        const deaths = this.state.day[key][1][parseInt(this.state.mapIndex, 10)]
         const [x, y] = this.state.transform.apply(COORDS[key])
-        const size = this.sizeScale(dataset === 'deaths' ? deaths : cases)
+        let size
+        if (parseInt(this.state.mapIndex, 10) === 2) {
+          size = dataset === 'deaths' ? deaths * 5 : cases * 5
+        } else {
+          size = this.sizeScale(dataset === 'deaths' ? deaths : cases)
+        }
         this.point.applyTo(this.casesCtx, x, y, size, size)
       }
     }

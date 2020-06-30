@@ -1,14 +1,15 @@
 <template lang="pug">
 div
-  span {{ metric[0] | prettyNumber }}
-  small {{ metric[1] | delta }}
+  span {{ metric[map] | prettyNumber }} {{ metric[map] | pop({ id, bucket }) }}
+  small {{ metric[parseInt(map, 10) + 1] | delta }}
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
-  props: {
-    metric: Array
-  }
+  props: ['metric', 'id', 'bucket'],
+  computed: mapState(['map'])
 }
 </script>
 

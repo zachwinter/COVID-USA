@@ -29,7 +29,9 @@ main.base
       overflow-y: auto;
     }
 
-    @include mobile-landscape { overflow-y: auto; }
+    @include mobile-landscape {
+      overflow-y: auto;
+    }
   }
 
   .section {

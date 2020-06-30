@@ -20,7 +20,7 @@ export default {
     model: Array,
     yAxisWidth: {
       type: Number,
-      default: 40
+      default: 70
     },
     xAxisHeight: {
       type: Number,

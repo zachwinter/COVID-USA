@@ -6,27 +6,30 @@
       Controls
       Buckets
     template(v-slot:map)
-      .map(ref="map")
-        ToolTip
-        GitHub
+      Datapoints(:transform="transform" :projection="projection")
+      USA(@transform="onTransform" @projection="onProject" :mapData="topojson" @hover="onHover" @mouse="onMouse")
+      ToolTip
+      GitHub
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
+import { mapState } from 'vuex'
 import {
-  SET_STATE,
-  SET_COUNTY,
+  SET_TRANSFORM, 
+  SET_PROJECTION, 
+  SET_HOVER, 
   SET_MOUSE,
-  SET_HOVER,
-  SET_INDEX
+  SET_COUNTY,
+  SET_STATE
 } from '@/store'
 import ToolTip from '@/components/ToolTip'
 import Loading from '@/components/Loading'
 import BaseLayout from '@/layouts/BaseLayout'
 import Buckets from '@/components/Buckets'
 import Controls from '@/components/Controls'
-import Map from '@/classes/Map'
+import USA from '@/components/USA'
 import GitHub from '@/components/GitHub'
+import Datapoints from '@/components/Datapoints'
 
 export default {
   components: {
@@ -35,61 +38,41 @@ export default {
     ToolTip, 
     Controls,
     Buckets,
-    GitHub
+    GitHub,
+    USA,
+    Datapoints
   },
-  computed: {
-    ...mapState(['index', 'dataset', 'loading', 'data', 'topojson']),
-    ...mapGetters(['caseIndex']),
-  },
+  computed: mapState([
+    'data',
+    'loading', 
+    'topojson', 
+    'transform', 
+    'projection',
+    'hover'
+  ]),
   watch: {
-    dataset (val) {
-      this.map.state.dataset = val
-    },
-    index (val) {
-      this.map.state.index = val
-    },
-    caseIndex (val) {
-      this.map.state.caseIndex = val
-    },
-    async loading (val) {
-      if (!val) {
-        await this.$nextTick()
-        this.init()
-      }
+    data () {
+      this.$store.dispatch('animate')
     }
   },
   created () {
     this.$store.dispatch('fetchData')
   },
-  beforeDestroy () {
-    this.map.destroy()
-  },
   methods: {
-    init () {
-      this.map = new Map({
-        container: this.$refs.map, 
-        dataset: this.dataset, 
-        caseIndex: this.caseIndex,
-        data: this.data,
-        usa: this.topojson
-      })
-      this.map.state.watch('hover', val => {
-        this.$store.commit(SET_HOVER, val)
-        if (val) {
-          this.$store.commit(SET_STATE, val.state.name)
-          this.$store.commit(SET_COUNTY, val.county)
-        }
-      })
-      this.map.state.watch('mouse', val => {
-        this.$store.commit(SET_MOUSE, val)
-      })
-      this.map.state.watch('index', val => {
-        this.$store.commit(SET_INDEX, val)
-      })
-      window.addEventListener('resize', () => {
-        this.$store.dispatch('detectMobile')
-      })
-      this.$store.dispatch('animate')
+    onTransform (val) {
+      this.$store.commit(SET_TRANSFORM, val)
+    },
+    onProject (val) {
+      this.$store.commit(SET_PROJECTION, val)
+    },
+    onHover (val) {
+      this.$store.commit(SET_HOVER, val)
+      if (!val) return
+      this.$store.commit(SET_COUNTY, val.fips)
+      this.$store.commit(SET_STATE, val.state)
+    },
+    onMouse (val) {
+      this.$store.commit(SET_MOUSE, val)
     }
   }
 }

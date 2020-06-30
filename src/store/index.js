@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import { isMobile, isMobileLandscape } from '../util/viewport'
 import { format } from 'date-fns'
+import * as d3 from 'd3'
 
 Vue.use(Vuex)
 
@@ -14,10 +15,16 @@ export const SET_MOUSE = 'SET_MOUSE'
 export const SET_HOVER = 'SET_HOVER'
 export const SET_IS_MOBILE_LANDSCAPE = 'SET_IS_MOBILE_LANDSCAPE'
 export const SET_DATASET = 'SET_DATASET'
+export const SET_DATAPOINTS = 'SET_DATAPOINTS'
 export const SET_DATA = 'SET_DATA'
 export const SET_TOPOJSON = 'SET_TOPOJSON'
 export const CASES = 'CASES'
 export const DEATHS = 'DEATHS'
+export const SET_MAP = 'SET_MAP'
+export const SET_TRANSFORM = 'SET_TRANSFORM'
+export const SET_PROJECTION = 'SET_PROJECTION'
+export const POPULATION = 'POPULATION'
+export const VALUES = 'VALUES'
 
 export default new Vuex.Store({
   state: {
@@ -30,7 +37,11 @@ export default new Vuex.Store({
     mouse: [0, 0],
     hover: null,
     dataset: CASES,
-    data: null
+    datapoints: VALUES,
+    map: '2',
+    data: null,
+    transform: d3.zoomIdentity,
+    projection: () => {}
   },
   mutations: {
     [SET_LOADING] (state, val) {
@@ -60,11 +71,23 @@ export default new Vuex.Store({
     [SET_DATASET] (state, val) {
       state.dataset = val
     },
+    [SET_DATAPOINTS] (state, val) {
+      state.datapoints = val
+    },
     [SET_DATA] (state, val) {
       state.data = val
     },
     [SET_TOPOJSON] (state, val) {
       state.topojson = val
+    },
+    [SET_MAP] (state, val) {
+      state.map = val
+    },
+    [SET_TRANSFORM] (state, val) {
+      state.transform = val
+    },
+    [SET_PROJECTION] (state, val) {
+      state.projection = val
     }
   },
   actions: {
@@ -88,8 +111,9 @@ export default new Vuex.Store({
       commit(SET_DATASET, DEATHS)
     },
     animate ({ state, commit }) {
+      commit(SET_INDEX, 0)
       const tick = () => {
-        if (state.index < state.data.days.length - 1) {
+        if (state.index < state.data.dates.length - 1) {
           commit(SET_INDEX, state.index + 1)
           requestAnimationFrame(tick)
         }
@@ -99,57 +123,68 @@ export default new Vuex.Store({
   },
   getters: {
     totalDays (state) {
-      return state.data.days.length - 1
+      return state.data.dates.length - 1
     },
     caseIndex ({ dataset }) {
       return dataset === CASES ? 0 : 1
     },
-    activeDay ({ data, index }) {
-      return Object.freeze(data.days[index]) || null
-    },
     activeDate ({ data, index }) {
-      return new Date(data.days[index].meta.date)
+      return new Date(data.dates[index])
     },
     formattedActiveDate ({ data, index }) {
-      const date = new Date(data.days[index].meta.date)
-      return format(date, 'MMM d')
+      return format(new Date(data.dates[index]), 'MMM d')
     },
-    stateModel ({ dataset, data, state }) {
-      return Object.freeze(data.states[state].map(day => {
+    datapoints ({ datapoints, data, dataset, index, map }) {
+      if (!data) return []
+      return Object.freeze(data.counties.map(datum => {
         return {
-          date: day.date,
-          value: day[dataset.toLowerCase()]
+          datum,
+          value: datapoints === POPULATION
+            ? (datum.days[index][dataset.toLowerCase()][map] / datum.population) * 100
+            : datum.days[index][dataset.toLowerCase()][map]
         }
       }))
     },
-    countyModel ({ dataset, county, data }) {
-      return Object.freeze(data.counties[county.fips].map(day => {
+    activeCounty ({ data, county }) {
+      return data.counties.find(d => d.fips === county) || null
+    },
+    stateModel ({ dataset, data, state, map }) {
+      return Object.freeze(data.states[state].days.map(day => {
         return {
           date: day.date,
-          value: day[dataset.toLowerCase()]
+          value: day[dataset.toLowerCase()][parseInt(map, 10)]
         }
       }))
     },
-    countryModel ({ data, dataset }) {
-      return Object.freeze(data.country.map(day => {
+    countyModel ({ dataset, map }, { activeCounty }) {
+      if (!activeCounty) return []
+      const model = Object.freeze(activeCounty.days.map(day => {
         return {
           date: day.date,
-          value: day[dataset.toLowerCase()]
+          value: day[dataset.toLowerCase()][parseInt(map, 10)]
+        }
+      }))
+      return model[0].value === undefined ? [] : model
+    },
+    countryModel ({ data, dataset, map }) {
+      return Object.freeze(data.country.days.map(day => {
+        return {
+          date: day.date,
+          value: day[dataset.toLowerCase()][parseInt(map, 10)]
         }
       }))
     },
     usaStats ({ index, data, dataset }) {
-      const set = dataset.toLowerCase()
-      const key = set === 'deaths' ? 'deaths' : 'cases'
-      return Object.freeze(data.days[index].meta)[key]
+      return data.country.days[index][dataset.toLowerCase()]
     },
-    stateStats ({ state, data, index }, { caseIndex }) {
+    stateStats ({ state, data, index, dataset }) {
       if (!state) return []
-      return Object.freeze(data.days[index][state])[caseIndex]
+      return data.states[state].days[index][dataset.toLowerCase()]
     },
-    countyStats ({ index, data, county }, { caseIndex }) {
-      if (!county) return {}
-      return Object.freeze(data.days[index][county.fips])[caseIndex]
+    countyStats ({ index, data, county, dataset }) {
+      const obj = data.counties.find(d => d.fips === county)
+      if (!county || !obj) return []
+      return obj.days[index][dataset.toLowerCase()]
     }
   }
 })
