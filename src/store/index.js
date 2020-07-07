@@ -93,7 +93,7 @@ export default new Vuex.Store({
   actions: {
     async fetchData ({ commit }) {
       const [data, usa] = await Promise.all([
-        fetch(PRODUCTION ? '/api/data/' : 'http://localhost:8000/api/data').then(res => res.json()), // eslint-disable-line
+        fetch(PRODUCTION ? '/api/data/' : 'http://192.168.0.104:8000/api/data').then(res => res.json()), // eslint-disable-line
         fetch('https://cdn.jsdelivr.net/npm/us-atlas@3/counties-10m.json').then(res => res.json())
       ])
       commit(SET_DATA, Object.freeze(data))
@@ -146,7 +146,7 @@ export default new Vuex.Store({
       }))
     },
     activeCounty ({ data, county }) {
-      return data.counties.find(d => d.fips === county) || null
+      return Object.freeze(data.counties.find(d => d.fips === county)) || null
     },
     stateModel ({ dataset, data, state, map }) {
       return Object.freeze(data.states[state].days.map(day => {

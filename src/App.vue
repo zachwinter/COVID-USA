@@ -6,17 +6,19 @@
       Controls
       Buckets
     template(v-slot:map)
-      Datapoints(:transform="transform" :projection="projection")
-      USA(@transform="onTransform" @projection="onProject" :mapData="topojson" @hover="onHover" @mouse="onMouse")
+      .map(ref="map")
+      DaySlider
+      //- Datapoints(:transform="transform" :projection="projection")
+      //- USA(@transform="onTransform" @projection="onProject" :mapData="topojson" @hover="onHover" @mouse="onMouse")
       ToolTip
-      GitHub
+      //- GitHub
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import {
-  SET_TRANSFORM, 
-  SET_PROJECTION, 
+  // SET_TRANSFORM, 
+  // SET_PROJECTION, 
   SET_HOVER, 
   SET_MOUSE,
   SET_COUNTY,
@@ -28,8 +30,10 @@ import BaseLayout from '@/layouts/BaseLayout'
 import Buckets from '@/components/Buckets'
 import Controls from '@/components/Controls'
 import USA from '@/components/USA'
-import GitHub from '@/components/GitHub'
+// import GitHub from '@/components/GitHub'
 import Datapoints from '@/components/Datapoints'
+import Map from '@/classes/Map'
+import DaySlider from '@/components/DaySlider'
 
 export default {
   components: {
@@ -38,41 +42,67 @@ export default {
     ToolTip, 
     Controls,
     Buckets,
-    GitHub,
+    // GitHub,
     USA,
-    Datapoints
+    Datapoints,
+    DaySlider
   },
-  computed: mapState([
-    'data',
-    'loading', 
-    'topojson', 
-    'transform', 
-    'projection',
-    'hover'
-  ]),
+  computed: {
+    ...mapState({
+      data: s => s.data,
+      dataset: s => s.dataset,
+      _datapoints: s => s.datapoints,
+      map: s => s.map,
+      loading: s => s.loading, 
+      topojson: s => s.topojson, 
+      transform: s => s.transform, 
+      projection: s => s.projection,
+      hover: s => s.hover,
+      index: s => s.index
+    }),
+    ...mapGetters(['datapoints'])
+  },
   watch: {
-    data () {
+    data (val) {
       this.$store.dispatch('animate')
+      console.log(val)
+    },
+    _datapoints (val) {
+      if (!this._map) return
+      this._map.state.datapoints = val
+    },
+    datapoints (val) {
+      if (!this._map) return 
+      this._map.state.activeDataset = val
     }
   },
-  created () {
-    this.$store.dispatch('fetchData')
+  async mounted () {
+    await this.$store.dispatch('fetchData')
+    this.init()
   },
   methods: {
-    onTransform (val) {
-      this.$store.commit(SET_TRANSFORM, val)
-    },
-    onProject (val) {
-      this.$store.commit(SET_PROJECTION, val)
-    },
-    onHover (val) {
-      this.$store.commit(SET_HOVER, val)
-      if (!val) return
-      this.$store.commit(SET_COUNTY, val.fips)
-      this.$store.commit(SET_STATE, val.state)
-    },
-    onMouse (val) {
-      this.$store.commit(SET_MOUSE, val)
+    init () {
+      this._map = new Map({
+        container: this.$refs.map,
+        datapoints: this._datapoints,
+        activeDataset: this.datapoints,
+        usa: this.topojson,
+        data: this.data
+      })
+
+      this._map.state.watch('hover', val => {
+        if (val === null) {
+          this.$store.commit(SET_HOVER, null)
+          return
+        }
+        this.$store.commit(SET_HOVER, val.datum)
+        this.$store.commit(SET_COUNTY, val.datum.fips)
+        this.$store.commit(SET_STATE, val.datum.state)
+      })
+
+      this._map.state.watch('mouse', val => {
+        this.$store.commit(SET_MOUSE, val)
+      })
     }
   }
 }

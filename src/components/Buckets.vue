@@ -46,7 +46,7 @@ export default {
 
 <style lang="scss" scoped>
 .buckets {
-  height: calc(100% - 162px);
+  width: 100%;
   overflow-y: auto;
   padding: 20px;
 

@@ -136,7 +136,8 @@ export default {
     },
     initMouse () {
       const self = this
-      d3.select(this.$refs.canvas.$el).on('mousemove', function () {
+
+      function onPointerMove (self) {
         self.mouse = d3.mouse(this)
         self.$emit('mouse', self.mouse)
         const coords1 = self.projection.invert(self.transform.invert(self.mouse))
@@ -153,6 +154,15 @@ export default {
         const final = distance < .02 ? match : null
         self.hover = final
         self.$emit('hover', final)
+      }
+
+      d3.select(this.$refs.canvas.$el).on('mousemove', function () {
+        onPointerMove.call(this, self)
+      })
+      
+      d3.select(this.$refs.canvas.$el).on('touchmove', function () {
+        if (d3.event.target.classList.contains('no-touch')) return
+        onPointerMove.call(this, self)
       })
     },
     paint () {

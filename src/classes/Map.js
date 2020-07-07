@@ -1,31 +1,26 @@
 import { createCanvas, sizeCtx, TWO_PI } from '../util/canvas'
-// import usa from '../data/usa.json'
-// import locations from '../data/locations.json'
-// import days from '../data/total.json'
 import * as d3 from 'd3'
 import * as topojson from 'topojson-client'
 import Sprite from './Sprite'
 import Observe from '../util/observe'
-// import { createElement } from '@/util/dom'
 
 const COORDS = {}
+const TRANSFORMED_COORDS = {}
 
 export default class Map {
-  constructor ({ container, dataset, caseIndex, mapIndex, data, usa }) {
+  constructor ({ container, data, usa, datapoints, activeDataset }) {
     this.usa = usa
     this.data = data
     this.container = container
     this.state = {
-      dataset,
       width: container.offsetWidth,
       height: container.offsetHeight,
       dpi: window.devicePixelRatio,
       transform: d3.zoomIdentity,
       hover: null,
-      day: this.data.days[0],
+      datapoints,
       index: 0,
-      caseIndex,
-      mapIndex,
+      activeDataset,
       mouse: [0, 0],
       colors: {
         background: `#FBD0D0`,
@@ -38,12 +33,6 @@ export default class Map {
       },
       pointSize: 30
     }
-
-    // if ('__OffscreenCanvas' in window) {
-    //   this.initWorker()
-    //   this.state = Observe(this.state)
-    //   return
-    // }
  
     this.state = Observe(this.state)
     this.initCanvas()
@@ -51,36 +40,10 @@ export default class Map {
     this.initProjection()
     this.initZoom()
     this.initMouse()
-    this.initKeyboard()
     this.watch()
     this.paintMap()
     window.addEventListener('resize', this.onResize.bind(this))
   }
-
-  // initWorker () {
-  //   const worker = new Worker('../workers/map.worker.js', { type: 'module' });
-
-  //   worker.postMessage({
-  //     type: 'INIT',
-  //     payload: this.state
-  //   })
-
-  //   const c = (canvas) => {
-  //     canvas.width = this.state.width * window.devicePixelRatio
-  //     canvas.height = this.state.height * window.devicePixelRatio
-  //     canvas.style.width = this.state.width + 'px'
-  //     canvas.style.height = this.state.height + 'px'
-  //   }
-
-  //   const map = createElement('canvas', this.container)
-  //   const cases = createElement('canvas', this.container)
-  //   c(map)
-  //   c(cases)
-  //   const offscreenMap = map.transferControlToOffscreen()
-  //   const offscreenCases = map.transferControlToOffscreen()
-  //   worker.postMessage({ type: 'MAP_CANVAS', payload: offscreenMap }, [offscreenMap])
-  //   worker.postMessage({ type: 'CASES_CANVAS', payload: offscreenCases }, [offscreenCases])
-  // }
 
   initCanvas () {
     const { canvas: mapCanvas, ctx: mapCtx } = createCanvas({ target: this.container, width: this.state.width, height: this.state.height, alpha: false })
@@ -99,13 +62,8 @@ export default class Map {
   }
 
   watch () {
-    this.state.watch('index', val => {
-      this.state.day = this.data.days[val]
-      this.paintCases()
-      this.state.hover = this.state.hover ? this.buildToolTip(this.state.hover.county.fips) : null
-    })
-
     this.state.watch('transform', () => {
+      this.cacheTransformedCoordinates()
       this.paint()
       this.state.hover = null
     })
@@ -118,20 +76,15 @@ export default class Map {
       }
     })
 
-    this.state.watch('mapIndex', () => {
+    this.state.watch('activeDataset', () => {
       this.paintCases()
-    })
-
-    this.state.watch('dataset', () => {
-      this.paintCases()
-      this.state.hover = this.state.hover ? this.buildToolTip(this.state.hover.county.fips) : null
     })
   }
 
   initProjection () {
     this.state.transform = d3.zoomIdentity
     if (this.zoom) d3.select('canvas.cursor').call(this.zoom.transform, d3.zoomIdentity)
-    this.projection = d3.geoAlbersUsa().fitExtent([[20, 20], [this.state.width - 20, this.state.height - 20]], topojson.feature(this.usa, this.usa.objects.states))
+    this.projection = d3.geoAlbersUsa().fitExtent([[20, 20], [this.state.width - 20, this.state.height - 40]], topojson.feature(this.usa, this.usa.objects.states))
     this.buildSprites()
     this.cacheCoordinates()
   }
@@ -163,17 +116,17 @@ export default class Map {
     }
 
     if (map) {
-      const multiplier = window.devicePixelRatio
+      const multiplier = Math.min(window.devicePixelRatio, 2)
 
       this.map = new Sprite({ width: this.state.width * multiplier, height: this.state.height * multiplier, paint () {
         this.ctx.scale(multiplier, multiplier)
         const path = d3.geoPath(self.projection, this.ctx)
         this.ctx.beginPath()
-        path(topojson.mesh(self.usa, self.usa.objects.counties))
+        path(topojson.feature(self.usa, self.usa.objects.counties))
         this.ctx.lineWidth = self.featureScale(self.state.width) / 10
         this.ctx.fillStyle = self.state.colors.countyFill
         this.ctx.strokeStyle = self.state.colors.countyStroke
-        // this.ctx.fill()
+        this.ctx.fill()
         this.ctx.stroke()
         this.ctx.beginPath()
         path(topojson.mesh(self.usa, self.usa.objects.states))
@@ -222,7 +175,7 @@ export default class Map {
     const coords1 = self.projection.invert(self.state.transform.invert(self.state.mouse))
     let distance = null
     let match = null
-    self.data.locations.forEach(location => {
+    self.data.counties.forEach(location => {
       const coords2 = [location.lon, location.lat]
       const dist = d3.geoDistance(coords1, coords2)
       if (distance === null || dist < distance) {
@@ -234,45 +187,30 @@ export default class Map {
   }
 
   buildToolTip (ID) {
-    const location = this.data.locations.find(({ fips }) => fips === ID)
-    return {
-      county: {
-        ...location,
-        total: this.state.day[ID].total,
-        delta: this.state.day[ID].delta,
-      },
-      state: {
-        ...this.state.day[location.state],
-        name: location.state
-      },
-      country: {
-        total: this.state.day.meta.total,
-        delta: this.state.day.meta.delta
-      }
-    }
+    return this.state.activeDataset.find(({ datum }) => datum.fips === ID) || null
   } 
 
-  initKeyboard () {
-    document.addEventListener('keydown', this.onKeyDown.bind(this))
-  }
-
-  onKeyDown ({ keyCode }) {
-    if (keyCode === 37 && this.state.index !== 0) this.state.index--
-    if (keyCode === 39 && this.state.index !== this.data.days.length - 1) this.state.index++
-  }
-
   cacheCoordinates () {
-    this.data.locations.forEach(({ fips, lat, lon }) => {
+    this.data.counties.forEach(({ fips, lat, lon }) => {
       COORDS[fips] = this.projection([lon, lat])
+    })
+
+    this.cacheTransformedCoordinates()
+  }
+
+  cacheTransformedCoordinates () {
+    this.data.counties.forEach(({ fips }) => {
+      if (COORDS[fips]) TRANSFORMED_COORDS[fips] = this.state.transform.apply(COORDS[fips])
     })
   }
 
   onResize () {
     this.state.width = this.container.offsetWidth
     this.state.height = this.container.offsetHeight
-    sizeCtx({ ctx: this.mapCtx, width: this.state.width, height: this.state.height })
-    sizeCtx({ ctx: this.casesCtx, width: this.state.width, height: this.state.height })
-    sizeCtx({ ctx: this.cursorCtx, width: this.state.width, height: this.state.height })
+    const { width, height } = this.state
+    sizeCtx({ ctx: this.mapCtx, width, height })
+    sizeCtx({ ctx: this.casesCtx, width, height })
+    sizeCtx({ ctx: this.cursorCtx, width, height })
     this.initProjection()
     this.initZoom()
     this.paint()
@@ -306,38 +244,27 @@ export default class Map {
   }
 
   paintCases () {
-    const dataset = this.state.dataset.toLowerCase()
     this.clearCases()
-    this.casesCtx.save()
-    this.casesCtx.beginPath()
-    for (let key in this.state.day) {
-      if (COORDS[key]) {
-        const cases = this.state.day[key][0][parseInt(this.state.mapIndex, 10)]
-        const deaths = this.state.day[key][1][parseInt(this.state.mapIndex, 10)]
-        const [x, y] = this.state.transform.apply(COORDS[key])
-        let size
-        if (parseInt(this.state.mapIndex, 10) === 2) {
-          size = dataset === 'deaths' ? deaths * 5 : cases * 5
-        } else {
-          size = this.sizeScale(dataset === 'deaths' ? deaths : cases)
-        }
+    this.state.activeDataset.forEach(({ datum, value }) => {
+      if (TRANSFORMED_COORDS[datum.fips]) {
+        const [x, y] = TRANSFORMED_COORDS[datum.fips]
+        const size = this.state.datapoints === 'POPULATION' ? value * 8 : this.sizeScale(value)
         this.point.applyTo(this.casesCtx, x, y, size, size)
       }
-    }
-    this.casesCtx.fill()
-    this.casesCtx.restore()
+    })
   }
 
   paintCursor () {
     this.clearCursor()
     if (this.state.hover === null) return
-    const key = this.state.hover.county.fips
-    const [x, y] = this.state.transform.apply(COORDS[key])
+    const fips = this.state.hover.datum.fips
+    const value = this.state.hover.value
+    const [x, y] = TRANSFORMED_COORDS[fips]
     this.cursorCtx.save()
     this.cursorCtx.lineWidth = 2
     this.cursorCtx.strokeStyle = 'white'
     this.cursorCtx.beginPath()
-    const radius = Math.max(this.sizeScale(this.state.day[key][this.state.caseIndex][0]) / 2, 15)
+    const radius = (this.state.datapoints === 'POPULATION' ? value * 8 : this.sizeScale(value)) / 2
     this.cursorCtx.arc(x, y, radius, 0, Math.PI * 2)
     this.lastCursor = { x, y, radius }
     this.cursorCtx.closePath()
@@ -354,6 +281,5 @@ export default class Map {
     this.mapCanvas.remove()
     this.casesCanvas.remove()
     window.removeEventListener('resize', this.onResize.bind(this))
-    document.removeEventListener('keydown', this.onKeyDown.bind(this))
   }
 }

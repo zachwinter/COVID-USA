@@ -85,7 +85,7 @@ export default {
     setScales () {
       let max = d3.max(this.model.map(d => d.value))
       if (max === 0) max = 10
-      this.xScale = d3.scaleTime([new Date(this.model[0].date), new Date(this.model[this.model.length -1].date)], [0, this.width - this.yAxisWidth])
+      this.xScale = d3.scaleTime([new Date(this.model[0].date), new Date(this.model[this.model.length - 1].date)], [0, this.width - this.yAxisWidth])
       this.yScale = d3.scaleLinear([0, max], [this.height, 0])
       this.initAxis()
     },

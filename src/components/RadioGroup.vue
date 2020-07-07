@@ -36,11 +36,11 @@ export default {
 
   label {
     @include flex(center, flex-start);
-    width: 50%;
+    // width: 50%;
     text-align: left;
 
     &.disabled { opacity: .5 }
-    // margin-left: 10px;
+    margin-right: 10px;
   }
 
   span { padding-left: 10px; }

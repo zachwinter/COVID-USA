@@ -36,7 +36,8 @@ export default {
       this.paint()
     }
   },
-  mounted () {
+  async mounted () {
+    await this.$nextTick()
     this.initScales()
     this.createSprite()
     this.paint()
@@ -47,13 +48,13 @@ export default {
   },
   methods: {
     initScales () {
-      const { width } = this.$refs.canvas
+      const { size } = this.$refs.canvas
       this.viewportScale = d3.scaleLinear([0, 1920], [.6, 1])
-      const scale = this.viewportScale(width)
+      const scale = this.viewportScale(size[0])
       this.sizeScale = d3.scaleLog([1, 50, 10000, 100000], [1 * scale, 5 * scale, scale * 30, scale * 30 * 4])
     },
     createSprite () {
-      const pointSize = 200
+      const pointSize = 100
       this.sprite = new Sprite({ width: pointSize, height: pointSize, paint () {
         this.ctx.beginPath()
         this.ctx.arc(pointSize / 2, pointSize / 2, pointSize / 3, 0, Math.PI * 2)
@@ -67,7 +68,8 @@ export default {
       }})
     },
     paint () {
-      const { ctx, width, height } = this.$refs.canvas
+      const { ctx, size } = this.$refs.canvas
+      const [width, height] = size
       ctx.clearRect(0, 0, width, height)
       this.datapoints.forEach(({ datum, value }) => {
         const coords = this.projection([datum.lon, datum.lat])

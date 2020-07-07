@@ -2,7 +2,7 @@
 .tooltip(v-if="hover" :style="{ transform, width: width + 'px' }")
   .rows
     .row
-      span {{ hover.name }}
+      span {{ hover.county }}
       Metric(:metric="countyStats" bucket="counties" :id="hover.fips")
     .row
       span {{ hover.state }}
@@ -39,8 +39,8 @@ export default {
       if (x > width - this.width) {
        x -= x - (width - this.width)
       }
-      if (y > height - 100) {
-        y -= 150
+      if (y > height - 160) {
+        y -= 160
       }
       return `translateX(${x}px) translateY(${y}px)`
     }

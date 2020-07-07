@@ -269,7 +269,8 @@ function addStatePopulations (states) {
   const dates = days.map(d => new Date(d))
   const country = buildCountryData(states)
   calculateCountryProjections(country)
-  fs.writeFile('data.json', JSON.stringify({ dates, states, counties, country }), 'utf8', err => {
+  const final = { dates, states, counties, country }
+  fs.writeFile('data.json', JSON.stringify(final), 'utf8', err => {
     if (err) console.log(err)
   })
 })()

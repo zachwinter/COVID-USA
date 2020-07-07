@@ -16,6 +16,7 @@ main.base
   }
 
   .aside {
+    @include flex(flex-start, flex-start, column);
     @include flex-width($aside-width);
     height: 100%;
     background: $dark-purple;
@@ -25,7 +26,6 @@ main.base
 
     @include max-width(mobile) {
       @include flex-width(100%);
-      @include flex-height($aside-height);
       overflow-y: auto;
     }
 

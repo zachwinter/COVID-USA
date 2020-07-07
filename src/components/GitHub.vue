@@ -11,12 +11,12 @@ export default {
 
 <style lang="scss" scoped>
 a {
-  @include size(40px);
-  @include position(absolute, null 15px 15px null);
+  @include size(20px);
+  // @include position(absolute, null 15px 15px null);
   @include flex;
   background: $dark-purple;
   border-radius: 100%;
-  z-index: 9;
+  z-index: 100;
 }
 
 svg {
