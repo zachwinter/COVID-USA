@@ -92,13 +92,17 @@ export default new Vuex.Store({
   },
   actions: {
     async fetchData ({ commit }) {
-      const [data, usa] = await Promise.all([
-        fetch(PRODUCTION ? '/api/data/' : 'http://192.168.0.104:8000/api/data').then(res => res.json()), // eslint-disable-line
-        fetch('https://cdn.jsdelivr.net/npm/us-atlas@3/counties-10m.json').then(res => res.json())
-      ])
-      commit(SET_DATA, Object.freeze(data))
-      commit(SET_TOPOJSON, Object.freeze(usa))
-      commit(SET_LOADING, false)
+      try {
+        const [data, usa] = await Promise.all([
+          fetch(PRODUCTION ? '/api/data/' : 'http://localhost:8000/api/data').then(res => res.json()), // eslint-disable-line
+          fetch('https://cdn.jsdelivr.net/npm/us-atlas@3/counties-10m.json').then(res => res.json())
+        ])
+        commit(SET_DATA, Object.freeze(data))
+        commit(SET_TOPOJSON, Object.freeze(usa))
+        commit(SET_LOADING, false)
+      } catch (e) {
+        console.log(e)
+      }
     },
     detectMobile ({ commit }) {
       commit(SET_IS_MOBILE, isMobile())
@@ -119,6 +123,16 @@ export default new Vuex.Store({
         }
       }
       requestAnimationFrame(tick)
+    },
+    next ({ state, commit }) {
+      if (state.index < state.data.dates.length - 1) {
+        commit(SET_INDEX, state.index + 1)
+      }
+    },
+    previous ({ state, commit }) {
+      if (state.index > 0) {
+        commit(SET_INDEX, state.index - 1)
+      }
     }
   },
   getters: {

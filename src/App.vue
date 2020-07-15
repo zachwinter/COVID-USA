@@ -63,9 +63,8 @@ export default {
     ...mapGetters(['datapoints'])
   },
   watch: {
-    data (val) {
+    data () {
       this.$store.dispatch('animate')
-      console.log(val)
     },
     _datapoints (val) {
       if (!this._map) return
@@ -78,10 +77,11 @@ export default {
   },
   async mounted () {
     await this.$store.dispatch('fetchData')
-    this.init()
+    this.initMap()
+    this.initKeyboard()
   },
   methods: {
-    init () {
+    initMap () {
       this._map = new Map({
         container: this.$refs.map,
         datapoints: this._datapoints,
@@ -102,6 +102,18 @@ export default {
 
       this._map.state.watch('mouse', val => {
         this.$store.commit(SET_MOUSE, val)
+      })
+    },
+    initKeyboard () {
+      document.body.addEventListener('keydown', e => {
+        if (e.keyCode === 37) {
+          e.preventDefault()
+          this.$store.dispatch('previous')
+        }
+        if (e.keyCode === 39) {
+          e.preventDefault()
+          this.$store.dispatch('next')
+        }
       })
     }
   }
