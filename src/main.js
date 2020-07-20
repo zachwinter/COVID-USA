@@ -11,8 +11,7 @@ installFilters(Vue)
 if (PRODUCTION && GOOGLE_ANALYTICS) {
   Vue.use(VueAnalytics, {
     // eslint-disable-next-line 
-    id: GOOGLE_ANALYTICS,
-    router
+    id: GOOGLE_ANALYTICS
   })
 }
 
