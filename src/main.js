@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import store from './store'
 import { installFilters } from './filters'
+import VueAnalytics from 'vue-analytics'
 
 Vue.config.productionTip = false
 
