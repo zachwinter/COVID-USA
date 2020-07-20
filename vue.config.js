@@ -22,7 +22,8 @@ module.exports = {
       new WorkerPlugin(),
       new webpack.DefinePlugin({
         PRODUCTION: JSON.stringify(process.env.NODE_ENV === 'production'),
-        DEVELOPMENT: JSON.stringify(process.env.NODE_ENV !== 'production')
+        DEVELOPMENT: JSON.stringify(process.env.NODE_ENV !== 'production'),
+        GOOGLE_ANALYTICS: JSON.stringify(process.env.GOOGLE_ANALYTICS)
       }),
     ],
   },

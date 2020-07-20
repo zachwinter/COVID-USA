@@ -79,6 +79,7 @@ export default {
     await this.$store.dispatch('fetchData')
     this.initMap()
     this.initKeyboard()
+    if (this.$ga) this.$ga.page('/')
   },
   methods: {
     initMap () {

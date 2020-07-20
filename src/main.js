@@ -7,6 +7,15 @@ Vue.config.productionTip = false
 
 installFilters(Vue)
 
+// eslint-disable-next-line 
+if (PRODUCTION && GOOGLE_ANALYTICS) {
+  Vue.use(VueAnalytics, {
+    // eslint-disable-next-line 
+    id: GOOGLE_ANALYTICS,
+    router
+  })
+}
+
 new Vue({
   store,
   render: h => h(App)

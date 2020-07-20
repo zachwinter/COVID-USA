@@ -22,6 +22,7 @@
     "node-dbf": "^0.4.0",
     "topojson-client": "^3.1.0",
     "vue": "^2.6.11",
+    "vue-analytics": "^5.22.1",
     "vue-color": "^2.7.1",
     "vuex": "^3.1.3"
   },
