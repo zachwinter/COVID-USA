@@ -2,9 +2,14 @@ const csvtojson = require('csvtojson');
 const fs = require('fs');
 const Parser = require('node-dbf').default
 const population = require('./population.json')
-const days = require('./days.json')
 
 const averageRecoveryInDays = 21
+let days = null
+
+async function getDays () {
+  const [datum] = await csvtojson().fromFile('cases.csv')
+  days = Object.keys(datum).filter(key => key.includes('/'))
+}
 
 function parseCensus () {
   return new Promise(resolve => {
@@ -257,6 +262,7 @@ function addStatePopulations (states) {
 }
 
 (async () => {
+  await getDays()
   const cases = await processDataset('cases')
   const deaths = await processDataset('deaths')
   const merged = mergeDatasets({ cases, deaths })
