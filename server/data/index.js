@@ -1,19 +1,28 @@
 const csvtojson = require('csvtojson');
-const fs = require('fs');
 const Parser = require('node-dbf').default
 const population = require('./population.json')
+const fetch = require('node-fetch')
 
-const averageRecoveryInDays = 21
-let days = null
+let CASES = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv'
+let DEATHS = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv'
+let DAYS = null
+const AVERAGE_RECOVERY_IN_DAYS = 21
 
-async function getDays () {
-  const [datum] = await csvtojson().fromFile('cases.csv')
-  days = Object.keys(datum).filter(key => key.includes('/'))
+async function initialize () {
+  const [cases, deaths] = await Promise.all([
+    fetch(CASES).then(res => res.text()),
+    fetch(DEATHS).then(res => res.text())
+  ])
+  CASES = await csvtojson().fromString(cases)
+  DEATHS = await csvtojson().fromString(deaths)
+  DAYS = Object.keys(CASES[0]).filter(key => key.includes('/'))
+  CASES = await massageJSON(CASES)
+  DEATHS = await massageJSON(DEATHS)
 }
 
 function parseCensus () {
   return new Promise(resolve => {
-    const parser = new Parser('./census.dbf')
+    const parser = new Parser(__dirname + '/census.dbf')
     const records = {}
     parser.on('record', record => {
       records[record.GEOID10] = record.DP0010001
@@ -55,7 +64,7 @@ async function massageJSON (json) {
   const countyPopulations = await buildCountyPopulations()
   return json.map(datum => {
     const _days = []
-    days.forEach(key => {
+    DAYS.forEach(key => {
       _days.push({
         date: new Date(key),
         value: parseInt(datum[key], 10)
@@ -74,15 +83,9 @@ async function massageJSON (json) {
   }).filter(datum => !isNaN(datum.fips))
 }
 
-async function processDataset (dataset) {
-  const json = await csvtojson().fromFile(`${dataset}.csv`)
-  const data = await massageJSON(json)
-  return data
-}
-
-function mergeDatasets ({ cases, deaths }) {
-  return cases.map((c, i) => {
-    const death = deaths[i]
+function mergeDatasets () {
+  return CASES.map((c, i) => {
+    const death = DEATHS[i]
     const days = c.days.map(({ date, value }, j) => {
       return {
         date,
@@ -110,7 +113,7 @@ function calculateCountyProjections (counties) {
   counties.forEach(county => {
     county.days.forEach((day, i) => {
       let total = 0
-      for (let k = i > averageRecoveryInDays ? i - averageRecoveryInDays : 0; k < i; k++) {
+      for (let k = i > AVERAGE_RECOVERY_IN_DAYS ? i - AVERAGE_RECOVERY_IN_DAYS : 0; k < i; k++) {
         total += county.days[k].cases[1]
       }
       day.cases.push(total)
@@ -131,7 +134,7 @@ function calculateCountyProjections (counties) {
 
 function calculateStateCases (data) {
   return [...new Set(data.map(d => d.state))].reduce((acc, state) => {
-    acc[state] = days.map((date, i) => {
+    acc[state] = DAYS.map((date, i) => {
       const cases = data.reduce((acc, county) => {
         if (county.state === state) {
           acc += county.days[i].cases[0]
@@ -177,7 +180,7 @@ function calculateStateProjections (states) {
     const state = states[key]
     state.forEach((day, i) => {
       let total = 0
-      for (let k = i > averageRecoveryInDays ? i - averageRecoveryInDays : 0; k < i; k++) {
+      for (let k = i > AVERAGE_RECOVERY_IN_DAYS ? i - AVERAGE_RECOVERY_IN_DAYS : 0; k < i; k++) {
         total += state[k].cases[1]
       }
       day.cases.push(total)
@@ -200,7 +203,7 @@ function buildCountryData (states) {
     acc += statePopulations[state]
     return acc
   }, 0)
-  const country = days.map(d => new Date(d)).reduce((acc, date, i) => {
+  const country = DAYS.map(d => new Date(d)).reduce((acc, date, i) => {
     const cases = Object.keys(states).reduce((acc, state) => {
       acc += states[state].days[i].cases[0]
       return acc
@@ -234,7 +237,7 @@ function buildCountryData (states) {
 function calculateCountryProjections (country) {
   country.days.forEach((day, i) => {
     let total = 0
-    for (let k = i > averageRecoveryInDays ? i - averageRecoveryInDays : 0; k < i; k++) {
+    for (let k = i > AVERAGE_RECOVERY_IN_DAYS ? i - AVERAGE_RECOVERY_IN_DAYS : 0; k < i; k++) {
       total += country.days[k].cases[1]
     }
     day.cases.push(total)
@@ -261,22 +264,17 @@ function addStatePopulations (states) {
   }, {})
 }
 
-(async () => {
-  await getDays()
-  const cases = await processDataset('cases')
-  const deaths = await processDataset('deaths')
-  const merged = mergeDatasets({ cases, deaths })
+module.exports = async () => {
+  await initialize()
+  const merged = mergeDatasets()
   const counties = calculateCountyDeltas(merged)
   calculateCountyProjections(counties)
   const stateCases = calculateStateCases(counties)
   let states = calculateStateDeltas(stateCases)
   calculateStateProjections(states)
   states = addStatePopulations(states)
-  const dates = days.map(d => new Date(d))
+  const dates = DAYS.map(d => new Date(d))
   const country = buildCountryData(states)
   calculateCountryProjections(country)
-  const final = { dates, states, counties, country }
-  fs.writeFile('data.json', JSON.stringify(final), 'utf8', err => {
-    if (err) console.log(err)
-  })
-})()
+  return { dates, states, counties, country }
+}
