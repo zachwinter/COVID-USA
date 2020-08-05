@@ -3,7 +3,7 @@
   "version": "2.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./server/index.js",
+    "start": "node --max_old_space_size=2048 ./server/index.js",
     "serve": "concurrently \"node ./server/index.js\" \"vue-cli-service serve\"",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
