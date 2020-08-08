@@ -49,7 +49,7 @@ export default {
   methods: {
     initScales () {
       const { size } = this.$refs.canvas
-      this.viewportScale = d3.scaleLinear([0, 1920], [.6, 1])
+      this.viewportScale = d3.scaleLinear([0, 1920], [0, 1])
       const scale = this.viewportScale(size[0])
       this.sizeScale = d3.scaleLog([1, 50, 10000, 100000], [1 * scale, 5 * scale, scale * 30, scale * 30 * 4])
     },
