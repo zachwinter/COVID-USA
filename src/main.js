@@ -8,7 +8,7 @@ Vue.config.productionTip = false
 
 installFilters(Vue)
 
-// eslint-disable-next-line 
+// eslint-disable-next-line  
 if (PRODUCTION && GOOGLE_ANALYTICS) {
   Vue.use(VueAnalytics, {
     // eslint-disable-next-line 
