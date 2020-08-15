@@ -13,7 +13,7 @@ module.exports = async () => {
     const [cases, deaths] = await Promise.all([
       fetch(CASES).then(res => res.text()),
       fetch(DEATHS).then(res => res.text())
-    ])
+    ]) 
     CASES = await csvtojson().fromString(cases)
     DEATHS = await csvtojson().fromString(deaths)
     DAYS = Object.keys(CASES[0]).filter(key => key.includes('/'))
