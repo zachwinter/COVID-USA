@@ -12,7 +12,7 @@ module.exports = async () => {
   async function initialize () {
     const [cases, deaths] = await Promise.all([
       fetch(CASES).then(res => res.text()),
-      fetch(DEATHS).then(res => res.text())
+      fetch(DEATHS).then(res => res.text()) 
     ]) 
     CASES = await csvtojson().fromString(cases)
     DEATHS = await csvtojson().fromString(deaths)
