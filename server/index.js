@@ -12,7 +12,7 @@ const port = process.env.PORT || 8000
 const buildData = require('./data')
 const cron = require('node-cron')
 
-let data = null
+let data = null 
 
 ;(async () => {
   data = await buildData()
