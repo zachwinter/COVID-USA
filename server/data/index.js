@@ -7,7 +7,7 @@ module.exports = async () => {
   let CASES = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv'
   let DEATHS = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv'
   let DAYS = null
-  const AVERAGE_RECOVERY_IN_DAYS = 21
+  const AVERAGE_RECOVERY_IN_DAYS = 21 
   
   async function initialize () {
     const [cases, deaths] = await Promise.all([
