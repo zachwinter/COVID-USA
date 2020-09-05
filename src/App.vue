@@ -34,7 +34,7 @@ import USA from '@/components/USA'
 import Datapoints from '@/components/Datapoints'
 import Map from '@/classes/Map'
 import DaySlider from '@/components/DaySlider'
-
+ 
 export default {
   components: {
     Loading,
