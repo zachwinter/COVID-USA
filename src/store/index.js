@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import { isMobile, isMobileLandscape } from '../util/viewport'
 import { format } from 'date-fns'
 import * as d3 from 'd3'
+import parseData from './data'
 
 Vue.use(Vuex)
 
@@ -94,7 +95,7 @@ export default new Vuex.Store({
     async fetchData ({ commit }) {
       try {
         const [data, usa] = await Promise.all([
-          fetch(PRODUCTION ? '/api/data/' : 'http://localhost:8000/api/data').then(res => res.json()), // eslint-disable-line
+          parseData(), // eslint-disable-line
           fetch('https://cdn.jsdelivr.net/npm/us-atlas@3/counties-10m.json').then(res => res.json())
         ])
         commit(SET_DATA, Object.freeze(data))
