@@ -9,8 +9,8 @@ const compression = require('compression')
 const app = express()
 const root = path.resolve(__dirname, '../dist')
 const port = process.env.PORT || 8000
-const buildData = require('./data')
-const cron = require('node-cron')
+// const buildData = require('./data')
+// const cron = require('node-cron')
 
 let data = null 
 
@@ -31,11 +31,11 @@ let data = null
     })
     // app.get('/api/data', (req, res) => res.json(data))
   }
-  cron.schedule('0 0 * * *', async () => {
-    data = await buildData()
-  }, {
-    scheduled: true,
-    timezone: 'America/Los_Angeles'
-  })
+  // cron.schedule('0 0 * * *', async () => {
+  //   data = await buildData()
+  // }, {
+  //   scheduled: true,
+  //   timezone: 'America/Los_Angeles'
+  // })
   app.listen(port, () => console.log('Listening on port ' + port))
 })() 
