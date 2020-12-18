@@ -15,12 +15,12 @@ const cron = require('node-cron')
 let data = null 
 
 ;(async () => {
-  data = await buildData()
+  // data = await buildData()
   app.use(compression())
   app.use(bodyParser())
   app.use(cookieParser())
   if (process.env.NODE_ENV === 'production') {
-    app.get('/api/data', (req, res) => res.json(data))
+    // app.get('/api/data', (req, res) => res.json(data))
     app.use(express.static(root))
     app.use(fallback('index.html', { root })) 
   } else {
@@ -29,7 +29,7 @@ let data = null
       res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
       next()
     })
-    app.get('/api/data', (req, res) => res.json(data))
+    // app.get('/api/data', (req, res) => res.json(data))
   }
   cron.schedule('0 0 * * *', async () => {
     data = await buildData()
