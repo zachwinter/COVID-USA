@@ -21,7 +21,7 @@
     "express-history-api-fallback": "^2.2.1",
     "node-cron": "^2.0.3",
     "node-dbf": "^0.4.0",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^2.6.7",
     "topojson-client": "^3.1.0",
     "vue": "^2.6.11",
     "vue-analytics": "^5.22.1",
