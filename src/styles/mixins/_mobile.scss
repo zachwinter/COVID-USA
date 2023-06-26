@@ -1,0 +1,21 @@
+@mixin mobile-landscape {
+  @media (max-width: 1000px) and (max-height: 500px) and (orientation: landscape) {
+    @content;
+  }
+}
+
+@mixin mobile-portrait {
+  @media (max-width: 500px) and (max-height: 1000px) and (orientation: portrait) {
+    @content;
+  }
+}
+
+@mixin mobile {
+  @include mobile-landscape {
+    @content;
+  }
+
+  @include mobile-portrait {
+    @content;
+  }
+}

@@ -1,0 +1,99 @@
+@import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@300;400;700&display=swap');
+
+:root {
+  @each $color in $colors {
+    --#{nth($color, 1)}: #{nth($color, 2)};
+  }
+
+  --background-color: var(--black);
+  --ui-background: rgba(0, 0, 0, 0.75);
+}
+
+// References to the viewport sizes leveraged in the designs for this UI.
+
+:root {
+  --mobile-viewport: 375;
+  --tablet-viewport: 768;
+  --laptop-viewport: 1280;
+  --desktop-viewport: 1650;
+  --viewport-reference: var(--desktop-viewport);
+  --viewport-ratio-constant: calc(
+    var(--viewport-width) / var(--viewport-reference)
+  );
+}
+
+// Typography
+
+:root {
+  --font-family: 'Inconsolata', sans-serif;
+  --font-weight: 400;
+  --font-size: #{px(20)};
+  --text-rendering: optimizeLegibility;
+  --webkit-font-smoothing: antialiased;
+  --moz-osx-font-smoothing: grayscale;
+}
+
+// Elements / Layout
+
+:root {
+  --header-height: #{px(70)};
+  --desktop-element-height: #{px(65)};
+  --mobile-element-height: #{px(80)};
+  --element-height: var(--desktop-element-height);
+  --base-spacer: #{px(16)};
+  --outer-padding: calc(var(--base-spacer));
+  --min-element-height: 30px;
+  --border: 1px solid rgba(255, 255, 255, 0.15);
+  --horizontal-offset: #{px(50)};
+  --sidebar-width: calc(7 * calc(var(--button-width)));
+  --button-width: #{px(50)};
+  --button-height: #{px(40)};
+}
+
+// Animations
+
+:root {
+  --duration: 500ms;
+  --hover-duration: 300ms;
+  --page-duration: 700ms;
+  --easing: cubic-bezier(0.2, 0.5, 0.25, 1);
+  --base-transition: all var(--duration) var(--easing);
+  --hover-transition: all var(--hover-duration) var(--easing);
+  --page-transition: all var(--page-duration) cubic-bezier(1, 0, 0, 1);
+}
+
+// Form Elements
+
+:root {
+  --form-element-border: 1px solid var(--red);
+  --form-element-padding: calc(var(--base-spacer) / 2);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  font-weight: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  text-rendering: var(--text-rendering);
+  -webkit-font-smoothing: var(--webkit-font-smoothing);
+  -moz-osx-font-smoothing: var(--moz-osx-font-smoothing);
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+html,
+body {
+  font-family: var(--font-family);
+  font-weight: var(--font-weight);
+}
+
+[data-visibility] {
+  @include hide-with-opacity;
+}

@@ -1,0 +1,28 @@
+@mixin reset {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    font-weight: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  a {
+    text-decoration: none;
+    font-style: normal;
+  }
+
+  img,
+  canvas {
+    display: block;
+  }
+}

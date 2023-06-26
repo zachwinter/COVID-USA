@@ -1,0 +1,12 @@
+@use './strip.scss' as *;
+@use './size.scss' as *;
+@use './flex.scss' as *;
+
+@mixin form-control {
+  padding: 0 var(--form-element-padding);
+  border: var(--form-element-border);
+  appearance: none;
+  line-height: var(--element-height);
+  min-height: var(--min-element-height);
+  margin: 0;
+}

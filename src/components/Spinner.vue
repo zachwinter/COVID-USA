@@ -1,73 +1,47 @@
 <template>
-  <div class="spinner" ref="container" :class="{ visible, center }">
-    <div class="el" />
+  <div :class="{ visible }">
+    <span class="spinner" />
   </div>
 </template>
 
-<script>
-export default {
-  props: {
-    visible: {
-      type: Boolean,
-      default: true
-    },
-    center: {
-      type: Boolean,
-      default: false
-    }
-  }
-}
+<script setup lang="ts">
+defineProps<{
+  visible: boolean;
+}>();
 </script>
 
 <style lang="scss" scoped>
-$size: 40px;
-
-.container {
-  @include size(100%);
+div {
+  @include size(100vw, 100vh);
   @include flex;
-}
-
-.spinner {
-  @include size($size);
-  @include flex;
-  // @include position(absolute, 0 0 null 0);
-  margin: 0 auto;
+  @include position(fixed, 0 null null 0);
+  z-index: 100;
   pointer-events: none;
+  background: #0f0611;
   opacity: 0;
-  transition: opacity 200ms linear;
+  transition: opacity var(--duration) var(--easing);
 
   &.visible {
     opacity: 1;
   }
-
-  &.center {
-    @include position(absolute, 50% 0 null 0);
-    transform: translateY(-50%);
-  }
-}
-
-.el,
-.el:after {
-  content: '';
-  border-radius: 50%;
-  @include size($size);
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: translateY(-50%) translateX(-50%) rotate(0deg);
+  }
+  100% {
+    transform: translateY(-50%) translateX(-50%) rotate(360deg);
+  }
 }
 
-$col: $white;
-
-.el {
+.spinner {
+  @include size(40px);
+  @include center;
   display: block;
-  font-size: 10px;
-  text-indent: -9999em;
-  border-top: 1.1em solid transparent;
-  border-right: 1.1em solid $col;
-  border-bottom: 1.1em solid $col;
-  border-left: 1.1em solid $col;
-  animation: spin 1s infinite linear;
+  border: 4px solid var(--gray);
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
 }
 </style>

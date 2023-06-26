@@ -1,0 +1,57 @@
+@mixin fade-in($duration: 1000ms, $easing: var(--easing)) {
+  @keyframes fade-in {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  animation: fade-in $duration $easing forwards;
+  will-change: transform, opacity;
+}
+
+@mixin fade-out($duration: 1000ms, $easing: var(--easing)) {
+  @keyframes fade-out {
+    0% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+
+  animation: fade-in $duration $easing forwards;
+  will-change: transform, opacity;
+}
+
+@mixin fade-scale-in($duration: 1000ms, $easing: var(--easing)) {
+  @keyframes fade-scale-in {
+    0% {
+      opacity: 0;
+      transform: scale(2);
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  animation: fade-scale-in $duration $easing forwards;
+  will-change: transform, opacity;
+}
+
+@mixin fade-scale-out($duration: 1000ms, $easing: var(--easing)) {
+  @keyframes fade-scale-out {
+    0% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      transform: scale(1.5);
+    }
+  }
+
+  animation: fade-scale-in $duration $easing forwards;
+  will-change: transform, opacity;
+}

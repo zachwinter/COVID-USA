@@ -1,0 +1,15 @@
+@use './position.scss' as *;
+
+@mixin shade($background: rgba(0, 0, 0, 0.5)) {
+  * {
+    position: relative;
+    z-index: 1;
+  }
+
+  &:before {
+    @include position(absolute, 0 0 0 0);
+    content: '';
+    background: $background;
+    z-index: 0;
+  }
+}

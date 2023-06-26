@@ -1,41 +1,38 @@
-require('dotenv').config()
+import { config } from 'dotenv';
+import express from 'express';
+import data from './data/index.js';
+import path from 'path';
+import * as url from 'url';
+import fallback from 'express-history-api-fallback';
 
-const path = require('path')
-const express = require('express')
-const bodyParser = require('body-parser')
-const cookieParser = require('cookie-parser')
-const fallback = require('express-history-api-fallback')
-const compression = require('compression')
-const app = express()
-const root = path.resolve(__dirname, '../dist')
-const port = process.env.PORT || 8000
-// const buildData = require('./data')
-// const cron = require('node-cron')
+config();
 
-let data = null 
+const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
+const app = express();
+const root = path.resolve(__dirname, '../dist');
 
-;(async () => {
-  // data = await buildData()
-  app.use(compression())
-  app.use(bodyParser())
-  app.use(cookieParser())
-  if (process.env.NODE_ENV === 'production') {
-    // app.get('/api/data', (req, res) => res.json(data))
-    app.use(express.static(root))
-    app.use(fallback('index.html', { root })) 
-  } else {
-    app.use((req, res, next) => {
-      res.header('Access-Control-Allow-Origin', '*')
-      res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
-      next()
-    })
-    // app.get('/api/data', (req, res) => res.json(data))
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept'
+  );
+  next();
+});
+
+app.get('/api/data', async (req, res) => {
+  try {
+    res.send({ success: true, data });
+  } catch (e) {
+    res.send({ success: false, error: e });
   }
-  // cron.schedule('0 0 * * *', async () => {
-  //   data = await buildData()
-  // }, {
-  //   scheduled: true,
-  //   timezone: 'America/Los_Angeles'
-  // })
-  app.listen(port, () => console.log('Listening on port ' + port))
-})() 
+});
+
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(root));
+  app.use(fallback('index.html', { root }));
+}
+
+app.listen(process.env.VITE_SERVER_PORT || process.env.PORT || 3333, () =>
+  console.log('listening')
+);

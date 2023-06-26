@@ -1,0 +1,7 @@
+@mixin cascade($count: 10, $delay: 100ms, $init: 0ms) {
+  @for $i from 1 through $count {
+    &:nth-child(#{$i}) {
+      animation-delay: #{($init + (($i - 1) * $delay))};
+    }
+  }
+}

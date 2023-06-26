@@ -1,0 +1,6 @@
+@mixin grid($direction: row, $gutter: 0) {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: $direction;
+  gap: $gutter;
+}

@@ -1,0 +1,3 @@
+@function notch($area) {
+  @return env(safe-area-inset-#{$area});
+}

@@ -1,0 +1,15 @@
+@use '../functions/units.scss' as *;
+@import '../colors.scss';
+
+@mixin shadow {
+  // box-shadow: px(2) px(2) px(0) px(2) rgba(map-get($colors, 'purple'), 1);
+  // transition: transform 400ms var(--easing);
+  // border: px(2) solid var(--purple);
+  // border-radius: px(20);
+
+  &.transparent {
+    // box-shadow: px(0) px(0) 0 px(0) rgba(black, 0);
+    // border-color: transparent;/
+    // border-radius: px(20);
+  }
+}

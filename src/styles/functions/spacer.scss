@@ -1,0 +1,3 @@
+@function spacer($multiplier: 1) {
+  @return calc(#{$multiplier} * var(--base-spacer));
+}

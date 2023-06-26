@@ -1,0 +1,62 @@
+@use './size.scss' as *;
+@use './shadow.scss' as *;
+
+$thumb-size: calc(0.5 * var(--element-height));
+$track-size: 10px;
+
+@mixin thumb {
+  @include size($thumb-size);
+  @include shadow;
+  -webkit-appearance: none;
+  border: none;
+  border-radius: $thumb-size;
+  background: var(--red);
+  // border: px(4) solid var(--pink);
+  transition: var(--hover-transition);
+  cursor: pointer;
+
+  .editing & {
+    background: var(--pink);
+  }
+}
+
+@mixin track {
+  @include size(100%, $track-size);
+  background: rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+  border-color: transparent;
+  color: transparent;
+  border-radius: $track-size;
+}
+
+@mixin range {
+  input[type='range'] {
+    display: block;
+    width: calc(100% - 2 * var(--base-spacer));
+    margin: var(--outer-padding) auto calc(1 * var(--outer-padding)) auto;
+    color: var(--white);
+    -webkit-appearance: none;
+    background: transparent;
+  }
+
+  input[type='range']:focus {
+    outline: none;
+  }
+
+  input[type='range']::-moz-range-track {
+    @include track;
+  }
+
+  input[type='range']::-webkit-slider-runnable-track {
+    @include track;
+  }
+
+  input[type='range']::-webkit-slider-thumb {
+    @include thumb;
+    transform: translateY(calc(0.5 * var(--element-height) / -2 + #{$track-size} / 2));
+  }
+
+  input[type='range']::-moz-range-thumb {
+    @include thumb;
+  }
+}

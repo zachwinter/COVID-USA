@@ -1,0 +1,47 @@
+@use './size.scss' as *;
+@use './type.scss' as *;
+@use './flex.scss' as *;
+@use '../functions/units.scss' as *;
+
+@mixin button {
+  @include size(auto, px(50));
+  @include type(20, 20, 400);
+  @include flex;
+  gap: calc(var(--base-spacer) / 4);
+  padding: 0 px(25);
+  border-radius: px(15);
+  font-family: 'Bungee';
+  background: transparent;
+  // border: #{px(2)} solid white;
+  transition: var(--base-transition);
+  transition-duration: 150ms;
+  background: rgba(0, 0, 0, 0.6);
+  color: var(--black);
+  // will-change: transform, opacity;
+  white-space: nowrap;
+  padding: px(10);
+  flex-direction: row;
+  margin: spacer(0.5);
+  // box-shadow: 0 px(4) 0 px(2) rgba(black, 0.5);
+  // border: px(2) solid var(--white);
+  border: 0;
+  color: var(--white);
+  outline: 0;
+
+  *:disabled {
+    opacity: 0.8;
+  }
+
+  &:not(:disabled) {
+    &:hover {
+      background: white;
+      color: black;
+      transform: scale(1.05);
+    }
+
+    &:active {
+      transition-duration: 0ms;
+      transform: scale(1);
+    }
+  }
+}

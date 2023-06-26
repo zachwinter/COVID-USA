@@ -1,0 +1,7 @@
+@use '../functions/units.scss' as *;
+
+@mixin type($font-size, $line-height, $font-weight) {
+  font-size: px($font-size);
+  line-height: px($line-height);
+  font-weight: $font-weight;
+}
