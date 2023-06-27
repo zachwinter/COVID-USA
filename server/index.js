@@ -3,7 +3,6 @@ import express from 'express';
 import path from 'path';
 import * as url from 'url';
 import fallback from 'express-history-api-fallback';
-import monitor from 'express-status-monitor';
 
 config();
 
