@@ -7,7 +7,7 @@ An highly-performant, mobile-friendly interactive timeseries visualizing the spr
 * *Fast*. Thanks to instancing techniques and a hardware-accelerated `ctx.drawImage()`, rasterization of the map and datapoints only happens once – giving you a fluid, jank-free experience even when zooming or panning.
 * *Compare*. Click on any county to open a chart visualizing its data over time. Select multiple counties simultaneously and compare them within a shared, synchronized date range.
 * *Mobile-friendly*. Full touch gesture interactions for both map & charts. 
-* *Share*. Copy a URL to the clipboard linking directly to the visualization on your selected day.
+* *Share*. Copy a URL to the clipboard linking directly to the visualization on a selected day.
 
 
 ## Overview
