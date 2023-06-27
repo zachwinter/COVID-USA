@@ -23,8 +23,6 @@
 </template>
 
 <script setup lang="ts">
-import SyncedCharts from 'd3-vue/src/components/common/SyncedCharts.vue';
-import LineChart from 'd3-vue/src/components/charts/LineChart.vue';
 import CloseIcon from '../assets/close.svg';
 import { Location } from '../store/data';
 import { subDays } from 'date-fns';

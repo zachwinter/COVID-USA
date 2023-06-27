@@ -21,6 +21,7 @@ export default defineConfig({
         'src/store',
         'src/hooks',
         'src/interfaces',
+        'src/types',
         'src/enums',
       ],
       include: [/\.ts?$/, /\.vue\??/],
