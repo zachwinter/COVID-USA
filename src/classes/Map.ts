@@ -208,7 +208,7 @@ export default class Map {
   }
 
   buildSprites(): Record<SpriteName, Sprite> {
-    const [width, height, dpr] = this.size;
+    const [width, height] = this.size;
 
     const {
       projection,
@@ -323,7 +323,7 @@ export default class Map {
     return this.initMouseMove('mousemove');
   }
 
-  initMouseMove(event) {
+  initMouseMove(event: string) {
     select('canvas.cursor').on(event, (e: MouseEvent) => {
       e.preventDefault();
       e.stopImmediatePropagation();

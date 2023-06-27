@@ -18,8 +18,6 @@ declare module 'vue' {
     DatePicker: typeof import('./components/DatePicker.vue')['default']
     LineChart: typeof import('./components/charts/LineChart.vue')['default']
     Map: typeof import('./components/Map.vue')['default']
-    RouterLink: typeof import('vue-router')['RouterLink']
-    RouterView: typeof import('vue-router')['RouterView']
     Selection: typeof import('./components/d3/Selection.vue')['default']
     Share: typeof import('./components/Share.vue')['default']
     SideBar: typeof import('./components/SideBar.vue')['default']

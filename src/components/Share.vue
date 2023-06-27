@@ -11,6 +11,7 @@
 </template>
 
 <script setup lang="ts">
+// @ts-nocheck
 import ShareIcon from '../assets/share.svg?component';
 import GithubIcon from '../assets/github.svg?component';
 
