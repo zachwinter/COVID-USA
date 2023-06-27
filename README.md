@@ -15,7 +15,7 @@ In the absence of a reliable dataset for active cases on a county level, I'm der
 
 Although ultimately an approximation, the results are fascinating:
 
-* [`Nov. 05, 2020`](covid-usa.herokuapp.com#11052020)
+* [`Nov. 05, 2020`](https://covid-usa.herokuapp.com#11052020)
 * [`Aug. 17, 2021`](https://covid-usa.herokuapp.com/#08172021)
 * [`Dec. 25, 2021`](https://covid-usa.herokuapp.com/#12252021)
-* [`Sep. 01, 2022`](covid-usa.herokuapp.com#09012022)
+* [`Sep. 01, 2022`](https://covid-usa.herokuapp.com#09012022)
