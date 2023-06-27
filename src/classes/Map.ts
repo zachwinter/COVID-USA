@@ -142,7 +142,7 @@ export default class Map {
     return geoAlbersUsa().fitExtent(
       [
         [20, 50],
-        [width - 20, height - 100],
+        [width - 20, height - 50],
       ],
       topojson.feature(this.usa as any, this.usa.objects.nation as any)
     );

@@ -16,6 +16,7 @@ import ShareIcon from '../assets/share.svg?component';
 import GithubIcon from '../assets/github.svg?component';
 import { copyToClipboard } from '../util/clipboard'
 const data = useData();
+const toast = useToast();
 
 function share() {
   const day = data.date.getDate()
@@ -23,6 +24,7 @@ function share() {
   const year = data.date.getFullYear()
   const link = `${window.location.protocol}//${window.location.host}#${(month + 1) < 10 ? '0' : ''}${month + 1}${day < 10 ? '0' : ''}${day}${year}`;
   copyToClipboard(link)
+  toast.message('Link copied to clipboard.')
 }
 </script>
 

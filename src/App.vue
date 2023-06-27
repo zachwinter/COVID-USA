@@ -8,6 +8,7 @@
     <Map @hover="onHover" />
     <BarCharts />
     <Share />
+    <Toast />
   </main>
 
   <Spinner :visible="!data.loaded" />

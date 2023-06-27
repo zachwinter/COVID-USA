@@ -5,12 +5,11 @@
 </template>
 
 <script setup lang="ts">
-import { ScaleRecord } from '../../../types/D3';
 import { select } from 'd3-selection';
 import { ZoomTransform } from 'd3-zoom';
 import { axisBottom } from 'd3-axis';
 import { scaleLinear } from 'd3-scale';
-import { type Ref, ref, inject, computed, watch, onMounted } from 'vue'
+import { ScaleRecord } from '../../types/D3';
 
 const scales = inject('scales') as Ref<ScaleRecord>;
 const transform = inject('transform') as Ref<ZoomTransform>;

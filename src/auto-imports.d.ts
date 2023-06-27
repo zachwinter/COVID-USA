@@ -73,6 +73,7 @@ declare global {
   const useData: typeof import('./store/data')['useData']
   const useMap: typeof import('./store/map')['useMap']
   const useSlots: typeof import('vue')['useSlots']
+  const useToast: typeof import('./store/toast')['useToast']
   const useViewport: typeof import('./store/viewport')['useViewport']
   const watch: typeof import('vue')['watch']
   const watchEffect: typeof import('vue')['watchEffect']
@@ -156,6 +157,7 @@ declare module 'vue' {
     readonly useCssVars: UnwrapRef<typeof import('vue')['useCssVars']>
     readonly useData: UnwrapRef<typeof import('./store/data')['useData']>
     readonly useSlots: UnwrapRef<typeof import('vue')['useSlots']>
+    readonly useToast: UnwrapRef<typeof import('./store/toast')['useToast']>
     readonly useViewport: UnwrapRef<typeof import('./store/viewport')['useViewport']>
     readonly watch: UnwrapRef<typeof import('vue')['watch']>
     readonly watchEffect: UnwrapRef<typeof import('vue')['watchEffect']>
@@ -233,6 +235,7 @@ declare module '@vue/runtime-core' {
     readonly useCssVars: UnwrapRef<typeof import('vue')['useCssVars']>
     readonly useData: UnwrapRef<typeof import('./store/data')['useData']>
     readonly useSlots: UnwrapRef<typeof import('vue')['useSlots']>
+    readonly useToast: UnwrapRef<typeof import('./store/toast')['useToast']>
     readonly useViewport: UnwrapRef<typeof import('./store/viewport')['useViewport']>
     readonly watch: UnwrapRef<typeof import('vue')['watch']>
     readonly watchEffect: UnwrapRef<typeof import('vue')['watchEffect']>

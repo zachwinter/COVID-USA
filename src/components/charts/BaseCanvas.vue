@@ -9,8 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import { type Ref, ref, inject, watch } from 'vue'
-import { useArtboard } from '../../../hooks/Artboard';
+import { useArtboard } from '../../hooks/Artboard';
 
 defineProps<{ name: string | undefined }>();
 
