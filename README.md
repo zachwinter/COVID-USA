@@ -1,6 +1,15 @@
 # COVID-USA
 An highly-performant, mobile-friendly interactive timeseries visualizing the spread of COVID-19 in the United States.
 
+## Features
+
+* *Novel*. Visualize county-level active cases (per capita) on any day between `Jan. 22, 2020` and `Mar. 9, 2023`. 
+* *Fast*. Thanks to instancing techniques and a hardware-accelerated `ctx.drawImage()`, rasterization of the map and datapoints only happens once – giving you a fluid, jank-free experience even when zooming or panning.
+* *Compare*. Click on any county on the map to open a chart visualizing its data over time. Select multiple counties at the same time and compare them within a shared, synchronized date range.
+* *Mobile-friendly*. Full touch gesture interactions for both map & charts. 
+* *Share*. Copy a URL to the clipboard linking directly to the visualization on your selected day.
+
+
 ## Overview
 
 The [John Hopkins University COVID-19 Dashboard](https://coronavirus.jhu.edu/map.html) stood as source of truth for many of us following the COVID-19 pandemic, right up until the university's cessation of data collection on March 10, 2023. Their dataset, [archived on GitHub](https://github.com/CSSEGISandData/COVID-19), contains total *cumulative* cases per county in the United States. When visualizing this data over time, it quickly resembles the shape of a population map – providing little value or insight with regards to the movement of the virus.
