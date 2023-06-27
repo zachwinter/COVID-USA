@@ -1,10 +1,22 @@
-import collection from './data.collection.json' assert { type: 'json' }
-import days from './data.days.json' assert { type: 'json' }
-import map from './data.map.json' assert { type: 'json' }
-import population from './data.population.json' assert { type: 'json' }
-import states from './data.states.json' assert { type: 'json' }
-import stats from './data.stats.json' assert { type: 'json' }
-import usa from './data.usa.json' assert { type: 'json' }
+import fs from 'fs';
+import path from 'path';
+import * as url from 'url';
+
+const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
+
+const [collection, days, map, population, states, stats, usa] = [
+  './data.collection.json',
+  './data.days.json',
+  './data.map.json',
+  './data.population.json',
+  './data.states.json',
+  './data.stats.json',
+  './data.usa.json',
+].map(p => {
+  return JSON.parse(
+    fs.readFileSync(path.join(__dirname, p), { encoding: 'utf-8' })
+  );
+});
 
 export default {
   collection,
@@ -13,5 +25,5 @@ export default {
   population,
   states,
   stats,
-  usa
-}
+  usa,
+};
