@@ -6,7 +6,7 @@
 
 <script setup lang="ts" generic="P extends BarChartProps">
 import { type BarChartProps, BaseBarChartProps } from '../../types/BarChart';
-import D3 from '../d3/D3.vue';
+import D3 from './shared/D3.vue';
 
 const props = withDefaults(
   defineProps<BarChartProps>(),

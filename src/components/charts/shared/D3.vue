@@ -14,13 +14,13 @@
 
 <script setup lang="ts">
 import { ZoomBehavior, zoomIdentity, ZoomTransform } from 'd3-zoom';
-import { type ScaleRecord, type BaseProps, BarChartProps } from '../../types';
-import { buildScales } from '../../util/scales';
-import { initZoom } from '../../util/zoom';
+import { type ScaleRecord, type BaseProps, BarChartProps } from '../../../types';
+import { buildScales } from '../../../util/scales';
+import { initZoom } from '../../../util/zoom';
 import { select } from 'd3-selection';
 import { interpolateNumber } from 'd3-interpolate';
-import { timer } from '../../util/time';
-import { DefaultProps } from '../../types';
+import { timer } from '../../../util/time';
+import { DefaultProps } from '../../../types';
 
 const register = inject('register') as any;
 const updateTransform = inject('update:transform') as any;

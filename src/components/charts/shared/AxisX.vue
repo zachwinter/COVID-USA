@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import { ScaleRecord } from '../../types/D3';
+import { ScaleRecord } from '../../../types/D3';
 import { select } from 'd3-selection';
 import { ZoomTransform } from 'd3-zoom';
 import { axisBottom } from 'd3-axis';

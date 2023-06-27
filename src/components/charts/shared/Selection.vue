@@ -13,7 +13,7 @@
 <script setup lang="ts">
 import { type Ref, ref, inject } from 'vue'
 import { zoomIdentity } from 'd3-zoom';
-import { ScaleRecord } from '../../types/D3';
+import { ScaleRecord } from '../../../types/D3';
 import { pointer } from 'd3-selection';
 import BaseCanvas from './BaseCanvas.vue';
 
