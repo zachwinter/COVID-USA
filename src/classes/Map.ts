@@ -137,7 +137,6 @@ export default class Map {
 
   buildProjection(): GeoProjection {
     const [width, height] = this.size;
-
     this.state.transform = zoomIdentity;
 
     return geoAlbersUsa().fitExtent(

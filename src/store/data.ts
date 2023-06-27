@@ -185,17 +185,27 @@ export const useData = defineStore('data', () => {
   }
 
   async function fetchData() {
-    const { data } = await fetch(`/api/data`).then(res => res.json());
+    const [collection, days, map, population, states, stats, usaData] =
+      await Promise.all(
+        [
+          '/data.collection.json',
+          '/data.days.json',
+          '/data.map.json',
+          '/data.population.json',
+          '/data.states.json',
+          '/data.stats.json',
+          '/data.usa.json',
+        ].map(async file => await fetch(file).then(res => res.json()))
+      );
 
-    fipsData.value = Object.freeze(data.map);
-    populationData.value = Object.freeze(data.population);
-    stateData.value = Object.freeze(data.states);
-    locationData.value = Object.freeze(data.collection);
-    dayData.value = Object.freeze(data.days);
-    statsData.value = Object.freeze(data.stats);
-    usa.value = data.usa;
-    day.value = data.days.length - 1;
-
+    fipsData.value = Object.freeze(map);
+    populationData.value = Object.freeze(population);
+    stateData.value = Object.freeze(states);
+    locationData.value = Object.freeze(collection);
+    dayData.value = Object.freeze(days);
+    statsData.value = Object.freeze(stats);
+    usa.value = Object.freeze(usaData);
+    day.value = days.length - 1;
     loaded.value = true;
   }
 

@@ -156,6 +156,8 @@ onMounted(async () => {
     cursor: cursor.value,
   };
 
+  console.log(data)
+  
   app.value = new Map({
     canvases,
     locations: data.locationData as Location[],
