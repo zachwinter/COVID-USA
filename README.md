@@ -1,9 +1,11 @@
 # COVID-USA
 An highly-performant, mobile-friendly interactive timeseries visualizing the spread of COVID-19 in the United States.
 
+[https://covid-usa.herokuapp.com](https://covid-usa.herokuapp.com)
+
 ## Features
 
-* *Novel*. Visualize county-level active cases (per capita) on any day between `Jan. 22, 2020` and `Mar. 9, 2023`. 
+* *Novel*. Visualize derived county-level active cases (per capita) on any day between `Jan. 22, 2020` and `Mar. 9, 2023`. 
 * *Fast*. Thanks to instancing techniques and a hardware-accelerated `ctx.drawImage()`, rasterization of the map and datapoints only happens once – giving you a fluid, jank-free experience even when zooming or panning.
 * *Compare*. Click on any county to open a chart visualizing its data over time. Select multiple counties simultaneously and compare them within a shared, synchronized date range.
 * *Mobile-friendly*. Full touch gesture interactions for both map & charts. 
@@ -17,12 +19,9 @@ The [John Hopkins University COVID-19 Dashboard](https://coronavirus.jhu.edu/map
 This visualization attempts to augment the JHU dataset in two ways:
 
 1) The inclusion of county-level census data for visualizing data per-capita. 
-2) Visualizing *active* cases instead of *cumulative* cases.
+2) Visualizing *active* cases instead of *cumulative* cases. In the absence of a reliable dataset for active cases on a county level, the values are calculated based on the assumption that it takes, on average, 21 days to recover from COVID-19 (e.g. `Σ(i = n-21 to n-1) Δi`).
 
-
-In the absence of a reliable dataset for active cases on a county level, I'm deriving the data based on the assumption that it takes, on average, 21 days to recover from COVID-19.
-
-Although ultimately an approximation, the results are fascinating:
+These two considerations enable us to visualize *the shape of COVID-19's movement*, even if the values themselves are derived. The following are some interesting examples of some significant regional hotspots: 
 
 * [`Nov. 05, 2020`](https://covid-usa.herokuapp.com#11052020)
 * [`Aug. 17, 2021`](https://covid-usa.herokuapp.com/#08172021)
