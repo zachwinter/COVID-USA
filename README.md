@@ -14,7 +14,7 @@ An highly-performant, mobile-friendly interactive timeseries visualizing the spr
 
 ## Overview
 
-The [John Hopkins University COVID-19 Dashboard](https://coronavirus.jhu.edu/map.html) stood as source of truth for many of us following the COVID-19 pandemic, right up until the university's cessation of data collection on March 10, 2023. Their dataset, [archived on GitHub](https://github.com/CSSEGISandData/COVID-19), contains total *cumulative* cases per county in the United States. When visualizing this data over time, it quickly resembles the shape of a population map – providing little value or insight with regards to the movement of the virus.
+The [John Hopkins University COVID-19 Dashboard](https://coronavirus.jhu.edu/map.html) stood as a source of truth for many of us following the COVID-19 pandemic, right up until the university's cessation of data collection on March 10, 2023. Their dataset, [archived on GitHub](https://github.com/CSSEGISandData/COVID-19), contains total *cumulative* cases per county in the United States. When visualizing this data over time, it quickly resembles the shape of a population map – providing little value or insight with regards to the movement of the virus.
 
 This visualization attempts to augment the JHU dataset in two ways:
 
