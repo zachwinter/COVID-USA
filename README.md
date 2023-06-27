@@ -5,7 +5,7 @@ An highly-performant, mobile-friendly interactive timeseries visualizing the spr
 
 * *Novel*. Visualize county-level active cases (per capita) on any day between `Jan. 22, 2020` and `Mar. 9, 2023`. 
 * *Fast*. Thanks to instancing techniques and a hardware-accelerated `ctx.drawImage()`, rasterization of the map and datapoints only happens once – giving you a fluid, jank-free experience even when zooming or panning.
-* *Compare*. Click on any county on the map to open a chart visualizing its data over time. Select multiple counties at the same time and compare them within a shared, synchronized date range.
+* *Compare*. Click on any county to open a chart visualizing its data over time. Select multiple counties simultaneously and compare them within a shared, synchronized date range.
 * *Mobile-friendly*. Full touch gesture interactions for both map & charts. 
 * *Share*. Copy a URL to the clipboard linking directly to the visualization on your selected day.
 
