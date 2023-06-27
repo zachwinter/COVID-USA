@@ -185,9 +185,7 @@ export const useData = defineStore('data', () => {
   }
 
   async function fetchData() {
-    const { data } = await fetch(
-      `http://${import.meta.env.VITE_ORIGIN}:${import.meta.env.VITE_SERVER_PORT}/api/data`
-    ).then(res => res.json());
+    const { data } = await fetch(`/api/data`).then(res => res.json());
 
     fipsData.value = Object.freeze(data.map);
     populationData.value = Object.freeze(data.population);
