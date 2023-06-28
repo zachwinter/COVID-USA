@@ -26,6 +26,23 @@ function share() {
   copyToClipboard(link)
   toast.message('Link copied to clipboard.')
 }
+
+function onHashChange (e) {
+  const string = window.location.hash.slice(1)
+  const day = string.slice(2, 4);
+  const month = string.slice(0, 2);
+  const year = string.slice(-4);
+  const date = new Date(`${month}/${day}/${year}`)
+  data.setDateByDateObject(date)
+}
+
+onMounted(() => {
+  window.addEventListener('hashchange', onHashChange)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('hashchange', onHashChange)
+})
 </script>
 
 <style lang="scss" scoped>
