@@ -1,5 +1,5 @@
 # COVID-USA
-An highly-performant, mobile-friendly interactive timeseries visualizing the spread of COVID-19 in the United States.
+A highly-performant, mobile-friendly interactive timeseries visualizing the spread of COVID-19 in the United States.
 
 [https://covid-usa.herokuapp.com](https://covid-usa.herokuapp.com)
 
