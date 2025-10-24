@@ -2,7 +2,7 @@
 
 A highly-performant, mobile-friendly interactive timeseries visualizing the spread of COVID-19 in the United States.
 
-[View Live](https://covid-usa-6a51a4d99f96.herokuapp.com/))
+[View Live](https://covid-usa-6a51a4d99f96.herokuapp.com/)
 
 ## Features
 
